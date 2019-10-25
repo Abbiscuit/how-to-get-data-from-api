@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    users: []
+  };
+
+  componentDidMount() {
+    const API_URL = 'http://jsonplaceholder.typicode.com';
+
+    const url = `${API_URL}/users/`;
+    axios
+      .get(url)
+      .then(res => res.data)
+      .then(data => {
+        this.setState({ users: data });
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        {this.state.users.map(userData => {
+          return (
+            <p key={userData.id}>
+              <Link to={`/users/${userData.id}`}>{userData.name}</Link>
+            </p>
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 export default App;
